@@ -92,6 +92,13 @@ void TouchCalibration::validate_calibration() {
 bool TouchCalibration::handleTouch(uint16_t x, uint16_t y) {
   static millis_t next_button_update_ms = 0;
   const millis_t now = millis();
+  
+  // handle start calibration long press to avoid registering touch point as top-left corner calibration point
+  if (next_button_update_ms == 0) {
+    next_button_update_ms = now + BUTTON_DELAY_MENU;
+    return true;
+  }
+  
   if (PENDING(now, next_button_update_ms)) return false;
   next_button_update_ms = now + BUTTON_DELAY_MENU;
 
